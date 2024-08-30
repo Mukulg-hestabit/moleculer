@@ -1,5 +1,6 @@
 import { ServiceBroker } from "moleculer";
 import HTTPserver from "moleculer-web";
+import userServiceBroker from "./services/userService.js";
 
 const brokerNode = new ServiceBroker({
   nodeID: "node-1",
@@ -16,6 +17,7 @@ brokerNode.createService({
           "GET /products": "product.listProducts",
           "GET /listall": "product.showAll",
           "POST /addproducts": "product.addNew",
+          "POST /new/user": "user.createUser",
         },
       },
     ],
@@ -34,7 +36,7 @@ brokerNode2.createService({
       return "Hello World";
     },
     showAll(ctx) {
-      return ctx;
+      return ctx.params;
     },
     addNew(ctx) {
       return ctx;
@@ -42,4 +44,4 @@ brokerNode2.createService({
   },
 });
 
-Promise.all([brokerNode.start(), brokerNode2.start()]);
+Promise.all([userServiceBroker.start(), brokerNode.start(), brokerNode2.start()]);
