@@ -39,7 +39,7 @@ const insertUserToTable = async (values) => {
   ];
 
   const queryData = `INSERT INTO user 
-    (id,full_name,email,role,address,avatar,current_school,previous_school,parents_name,assigned_teacher,experience,expertise,is_approved) 
+    (full_name,email,role,address,avatar,current_school,previous_school,parents_name,assigned_teacher,experience,expertise,is_approved) 
   values (?,?,?,?,?,?,?,?,?,?,?,?)`;
 
   const query = await runQuery(queryData, queryValues);
