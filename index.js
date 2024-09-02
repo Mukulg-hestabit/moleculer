@@ -3,10 +3,11 @@ import HTTPserver from "moleculer-web";
 import userServiceBroker from "./services/userService.js";
 
 const brokerNode = new ServiceBroker({
-  nodeID: "node-1",
-  transporter: "NATS",
+  nodeID: "node-1", // id of ther broker
+  transporter: "NATS", // transporter medium
 });
 
+// Service initialized to listen on api requests
 brokerNode.createService({
   name: "gateway",
   mixins: [HTTPserver],
@@ -14,34 +15,21 @@ brokerNode.createService({
     routes: [
       {
         aliases: {
-          "GET /products": "product.listProducts",
-          "GET /listall": "product.showAll",
-          "POST /addproducts": "product.addNew",
           "POST /new/user": "user.createUser",
+          "DELETE /user/delete/:id": "user.deleteUserService",
         },
       },
     ],
   },
 });
 
-const brokerNode2 = new ServiceBroker({
-  nodeID: "node-2",
-  transporter: "NATS",
-});
-
-brokerNode2.createService({
-  name: "product",
-  actions: {
-    listProducts(ctx) {
-      return "Hello World";
-    },
-    showAll(ctx) {
-      return ctx.params;
-    },
-    addNew(ctx) {
-      return ctx;
-    },
-  },
-});
-
-Promise.all([userServiceBroker.start(), brokerNode.start(), brokerNode2.start()]);
+// Start all the services
+Promise.all([userServiceBroker.start(), brokerNode.start()])
+  .then(() => {
+    console.log("All services are up and running");
+  })
+  .catch((error) => {
+    {
+      console.log("Error in starting services", error);
+    }
+  });
